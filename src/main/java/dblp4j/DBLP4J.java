@@ -14,7 +14,7 @@ public final class DBLP4J {
     private static final Pattern patterCitedPaper = Pattern.compile("^#%");
 
     public static void main(String[] args) throws IOException {
-         final String FILENAME = "src/main/resources/dblp-v4.txt";
+        final String FILENAME = "src/main/resources/dblp-v4.txt";
 
         BufferedReader br = new BufferedReader(new FileReader(FILENAME));
         String line;
@@ -30,14 +30,17 @@ public final class DBLP4J {
                 paperTitle = line.substring(2);
             }else if (patternPaperIndex.matcher(line).find()){
                 paperId = Integer.parseInt(line.substring(6));
-                titleWriter.write(paperId + " " + paperTitle + "\n");
+                titleWriter.write(paperId + " " + publishedYear + " " + paperTitle + "\n");
             }else if(patternYear.matcher(line).find()){
                 publishedYear = Integer.parseInt(line.substring(2));
             }else if (patterCitedPaper.matcher(line).find()){
                 citationWriter.write(paperId + " " + Integer.parseInt(line.substring(2)) + " " + publishedYear + "\n");
+            }else if(line.equals("^\n")){
+                paperId = 0;
+                publishedYear = 0;
+                paperTitle = "";
             }
         }
-
         titleWriter.close();
         citationWriter.close();
     }
