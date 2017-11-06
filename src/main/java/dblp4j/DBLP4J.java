@@ -17,7 +17,7 @@ public final class DBLP4J {
     private static final Pattern patternAuthors = Pattern.compile("^#@");
 
     public static void main(String[] args) throws IOException {
-        final String FILENAME = "src/main/resources/dblp-v4.txt";
+        final String FILENAME = "src/main/resources/dblp.txt";
 
         BufferedReader br = new BufferedReader(new FileReader(FILENAME));
         String line;
