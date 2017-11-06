@@ -40,7 +40,7 @@ public final class DBLP4J {
 
         while ((line = br.readLine()) != null) {
             if (patternPaperTitle.matcher(line).find()) {
-                paperTitle = line.substring(2);
+                paperTitle = line.substring(2).trim();
             } else if (patternPaperIndex.matcher(line).find()) {
                 paperId = Integer.parseInt(line.substring(6));
             } else if (patternYear.matcher(line).find()) {
@@ -48,9 +48,14 @@ public final class DBLP4J {
             } else if (patternCitedPaper.matcher(line).find()) {
                 citationPapers.add(Integer.parseInt(line.substring(2)));
             } else if (patternConference.matcher(line).find()) {
-                conferenceName = line.substring(2).toLowerCase();
+                conferenceName = line.substring(2).toLowerCase().trim();
             } else if (patternAuthors.matcher(line).find()) {
                 authors = line.substring(2).split(",");
+                String[] trimmedAuthors = new String[authors.length];
+                for (int i = 0; i < authors.length; i++){
+                    trimmedAuthors[i] = authors[i].trim();
+                }
+                authors = trimmedAuthors;
             } else if (line.trim().isEmpty()) {
                 titleWriter.write(paperId + "\t" + publishedYear + "\t" + paperTitle + "\n");
                 paperConferenceWriter.write(paperId + "\t" + conferenceName + "\n");
@@ -85,6 +90,8 @@ public final class DBLP4J {
         System.out.println("Create authpr citation network");
         for (Map.Entry<String, Set<String>> e : authorBelongs2Conferences.entrySet()) {
             String author = e.getKey();
+
+
             authorConferenceWriter.write(author);
             for (String conference : e.getValue()) {
                 authorConferenceWriter.write("\t" + conference);
@@ -116,8 +123,16 @@ public final class DBLP4J {
 
         for (Map.Entry<String, HashMap<String, Integer>> e : adjList.entrySet()) {
             String fromAuthor = e.getKey();
+            if (fromAuthor.equals("")){
+                continue;
+            }
+
             for (Map.Entry<String, Integer> counter : e.getValue().entrySet()) {
                 String toAuthor = counter.getKey();
+                if (toAuthor.equals("")){
+                    continue;
+                }
+
                 int w = counter.getValue();
                 authorCitationWriter.write(fromAuthor + "\t" + toAuthor + "\t" + w + "\n");
             }

@@ -235,3 +235,7 @@ ENV/
 # Rope project settings
 .ropeproject
 
+*.tsv
+.idea/
+.gradle/
+dblp4j.iml
