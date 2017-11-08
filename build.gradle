@@ -6,6 +6,16 @@ apply plugin: 'application'
 
 mainClassName = "dblp4j.DBLP4J"
 
+run {
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+    if (project.hasProperty('Xmx')) {
+        jvmArgs "-Xmx" + project.Xmx
+    }
+}
+
+
 sourceCompatibility = 1.8
 
 repositories {

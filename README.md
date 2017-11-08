@@ -14,13 +14,13 @@ $ gradle run
 
 ## About created files
 
-### `title_year.tsv`
+### `papers.tsv`
 
 Each line contains 3 fields:
 
-1. paper index (int)
-2. published year (int)
-3. paper title (string)
+1. paper id (0-origin index)
+1. paper index (string, driven from original data)
+1. conference name (string)
 
 ---
  
@@ -46,8 +46,8 @@ Each line contains 2 fields:
 
 Each line contains 2 fields:
 
-1. source paper index (int)
-2. target paper index (int)
+1. source paper id (int)
+2. target paper id (int)  
 
 Each line represents a directed edge.
 
