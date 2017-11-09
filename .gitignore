@@ -239,3 +239,4 @@ ENV/
 .idea/
 .gradle/
 dblp4j.iml
+resources/

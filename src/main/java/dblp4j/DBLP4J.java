@@ -110,20 +110,19 @@ public final class DBLP4J {
         // create author-citation network
         FileWriter authorCitationWriter = new FileWriter("author_citation_edge.tsv");
         Map<String, HashMap<String, Integer>> adjList = new HashMap<>();
+        Set<Integer> validPaperNodes = new HashSet<>();
 
         br = new BufferedReader(new FileReader("./paper_citation_edge.tsv"));
         while ((line = br.readLine()) != null) {
             String[] edge = line.split("\t");
             int fromPaper = Integer.parseInt(edge[0]);
             int toPaper = Integer.parseInt(edge[1]);
+            validPaperNodes.add(fromPaper);
+            validPaperNodes.add(toPaper);
 
             // skip pair of paper which has no author information
-            if (!paperId2Authors.containsKey(fromPaper)){
-                continue;
-            }
-            if (!paperId2Authors.containsKey(toPaper)){
-                continue;
-            }
+            if (!paperId2Authors.containsKey(fromPaper)) continue;
+            if (!paperId2Authors.containsKey(toPaper)) continue;
 
             for (String fromAuthor : paperId2Authors.get(fromPaper)) {
                 HashMap<String, Integer> authorCounter = adjList.getOrDefault(fromAuthor, new HashMap<>());
@@ -136,15 +135,40 @@ public final class DBLP4J {
             }
         }
 
+        Set<String> validAuthorNodes = new HashSet<>();
         for (Map.Entry<String, HashMap<String, Integer>> e : adjList.entrySet()) {
             String fromAuthor = e.getKey();
+            validAuthorNodes.add(fromAuthor);
 
             for (Map.Entry<String, Integer> counter : e.getValue().entrySet()) {
                 String toAuthor = counter.getKey();
+                validAuthorNodes.add(toAuthor);
                 int numCiting = counter.getValue();
                 authorCitationWriter.write(fromAuthor + "\t" + toAuthor + "\t" + numCiting + "\n");
             }
         }
         authorCitationWriter.close();
+
+        // output papers information which has degree >= 1
+        br = new BufferedReader(new FileReader("./papers.tsv"));
+        FileWriter validPapersWriter = new FileWriter("valid_papers.tsv");
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split("\t");
+            if (validPaperNodes.contains(Integer.parseInt(data[0]))){
+                validPapersWriter.write(line + "\n");
+            }
+        }
+        validPapersWriter.close();
+
+        // output authors information which has degree >= 1
+        br = new BufferedReader(new FileReader("./author_conference_label.tsv"));
+        FileWriter validAuthorsWriter = new FileWriter("valid_author_conference_label.tsv");
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split("\t");
+            if (validAuthorNodes.contains(data[0])){
+                validAuthorsWriter.write(line + "\n");
+            }
+        }
+        validAuthorsWriter.close();
     }
 }

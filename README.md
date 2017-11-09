@@ -7,7 +7,7 @@ DBLP citation dataset parser by Java
 ```shell
 $ mkdir -p src/main/resources
 $ python download.py
-$ gradle run
+$ gradle run -PXmx=6g
 ```
 
 ---
@@ -29,6 +29,15 @@ Each line contains 3 fields:
 Each line contains 2 fields:
 
 1. paper index (int)
+2. conference/journal name (string)
+
+---
+
+### `valid_paper_conference_label.tsv`
+
+Each line contains 2 fields:
+
+1. paper index (int) which has the degree more than 1
 2. conference/journal name (string)
 
 ---
@@ -57,8 +66,20 @@ Each line represents a directed edge.
 
 Each line contains 2 fields:
 
-1. source author name (string)
+1. source author name (string) 
 2. target author name (string)
+3. the number of citations from source author (int)
+
+Each line represents a weighted and directed edge.
+
+---
+
+### `valid_author_citation_edge.tsv`
+
+Each line contains 2 fields:
+
+1. source author name (string), which has the degree more than 1 
+2. target author name (string), which has the degree more than 1
 3. the number of citations from source author (int)
 
 Each line represents a weighted and directed edge.
